@@ -1,29 +1,12 @@
+// uart_forward.h
 #pragma once
-
 #include "esphome.h"
 
-class UARTForwardSensor : public Component, public Sensor {
+class UARTForwardComponent : public esphome::Component {
  public:
-  explicit UARTForwardSensor(UARTComponent *parent_uart) : uart_(parent_uart) {}
-
-  void setup() override {
-    // Called once when component is initialized
-  }
-
-  void loop() override {
-    while (uart_->available()) {
-      char c = uart_->read();
-      buffer_ += c;
-
-      // Send data when newline received
-      if (c == '\n') {
-        publish_state(buffer_);
-        buffer_.clear();
-      }
-    }
-  }
+  explicit UARTForwardComponent(esphome::UARTComponent *uart);
+  void loop() override;
 
  protected:
-  UARTComponent *uart_;
-  std::string buffer_;
+  esphome::UARTComponent *uart_;
 };
