@@ -1,12 +1,13 @@
 #pragma once
 #include "esphome.h"
 
-class UARTForwardComponent : public esphome::Component, public esphome::TextSensor {
+class UARTForwardComponent : public Component {
  public:
-  explicit UARTForwardComponent(esphome::UARTComponent *uart);
+  UARTForwardComponent(UARTComponent *uart, TextSensor *text_sensor) : uart_(uart), text_sensor_(text_sensor) {}
 
   void loop() override;
 
  protected:
-  esphome::UARTComponent *uart_;
+  UARTComponent *uart_;
+  TextSensor *text_sensor_;
 };
