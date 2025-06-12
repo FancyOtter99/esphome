@@ -1,5 +1,4 @@
 #pragma once
-
 #include "esphome/core/component.h"
 #include "esphome/components/uart/uart.h"
 
@@ -8,12 +7,20 @@ namespace uart_forward {
 
 class UARTForwardComponent : public Component, public uart::UARTDevice {
  public:
-  explicit UARTForwardComponent(uart::UARTComponent *parent) : uart::UARTDevice(parent) {}
+  UARTForwardComponent(uart::UARTComponent *parent) : uart::UARTDevice(parent) {}
 
-  void loop() override;
-
- protected:
-  std::string buffer_;
+  void loop() override {
+    while (available()) {
+      std::string data;
+      while (available()) {
+        char c;
+        read_byte((uint8_t *)&c);
+        data += c;
+      }
+      ESP_LOGI("UARTForward", "Received: %s", data.c_str());
+      // Add HTTP post or other logic here
+    }
+  }
 };
 
 }  // namespace uart_forward
