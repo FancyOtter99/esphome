@@ -1,22 +1,13 @@
 #include "uart_forward.h"
-#include "esphome.h"
-
-using namespace esphome;
-
-UARTForwardComponent::UARTForwardComponent(UARTComponent *uart) {
-  this->uart_ = uart;
-}
 
 void UARTForwardComponent::loop() {
-  while (this->uart_->available()) {
+  if (uart_->available()) {
     std::string data;
-    while (this->uart_->available()) {
-      char c = this->uart_->read();
-      if (c == '\n') break;
-      data += c;
+    while (uart_->available()) {
+      char c = uart_->read();
+      data.push_back(c);
     }
-    if (!data.empty()) {
-      this->publish_state(data);
-    }
+    text_sensor_->publish_state(data.c_str());
   }
 }
+
